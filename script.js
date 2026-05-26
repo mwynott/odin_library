@@ -29,7 +29,15 @@ function addBookToLibrary() {
 
 function displayLibrary() {
     myLibrary.forEach(book => {
-        (`${book.title} by ${book.author}, ${book.pages} pages, ${book.isread ? "read" : "not read yet"}`);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.pages}</td>
+            <td>${book.isread ? "Yes" : "No"}</td>
+            <td><button onclick="removeBook('${book.id}')">Remove</button></td>`;
+        document.getElementById("libraryTable").appendChild(row);
     });
 }
 
+displayLibrary();
