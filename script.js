@@ -65,15 +65,40 @@ addBookForm.addEventListener("submit", function (event) {
 /* Function to display content of the library in the table */
 function displayLibrary() {
     const tableBody = document.getElementById("book-list-body");
-    tableBody.innerHTML = "";
+    tableBody.replaceChildren();
+
+    const headers = ["Title", "Author", "Pages", "Status", "ID"];
+    
+    headers.forEach(header => {
+        const th = document.createElement("th");
+        th.textContent = header;
+        tableBody.appendChild(th);
+    });
+
     myLibrary.forEach(book => {
+        
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-            <td>${book.pages}</td>
-            <td>${book.isread ? "Yes" : "No"}</td>
-            <td><button onclick="removeBook('${book.id}')">Remove</button></td>`;
+
+        const titleCell = document.createElement("td");
+        titleCell.textContent = book.title;
+        
+        const authorCell = document.createElement("td");
+        authorCell.textContent = book.author;
+        
+        const pagesCell = document.createElement("td");
+        pagesCell.textContent = book.pages;
+        
+        const statusCell = document.createElement("td");
+        statusCell.textContent = book.isread ? "Read" : "Not Read";
+        
+        const idCell = document.createElement("td");
+        idCell.textContent = book.id;
+
+        row.appendChild(titleCell);
+        row.appendChild(authorCell);
+        row.appendChild(pagesCell);
+        row.appendChild(statusCell);
+        row.appendChild(idCell);
         tableBody.appendChild(row);
     });
 }
