@@ -62,18 +62,19 @@ addBookForm.addEventListener("submit", function (event) {
 })
 
 
-/* Function to display content of the library in the table */
+/* Function to display content of the library in the table - Reset between instances*/
 function displayLibrary() {
     const tableBody = document.getElementById("book-list-body");
     tableBody.replaceChildren();
 
-    const headers = ["Title", "Author", "Pages", "Status", "ID"];
-    
+    const headers = ["Title", "Author", "Pages", "Read", "ID", "Delete"];
+    const headerRow = document.createElement("tr");
     headers.forEach(header => {
         const th = document.createElement("th");
         th.textContent = header;
-        tableBody.appendChild(th);
+        headerRow.appendChild(th);
     });
+    tableBody.appendChild(headerRow);
 
     myLibrary.forEach(book => {
         
@@ -88,17 +89,41 @@ function displayLibrary() {
         const pagesCell = document.createElement("td");
         pagesCell.textContent = book.pages;
         
-        const statusCell = document.createElement("td");
-        statusCell.textContent = book.isread ? "Read" : "Not Read";
+        /* Create a checkbox for the read status and update upon change */
+        const readCell = document.createElement("td");
+        const readBtn = document.createElement("input");
+        readBtn.addEventListener("change", () => {
+            book.isread = readBtn.checked;
+        });
+        readBtn.type = "checkbox";
+        readBtn.checked = book.isread;
+        readCell.appendChild(readBtn);
         
         const idCell = document.createElement("td");
         idCell.textContent = book.id;
 
+        /* Create a delete button for each book and remove it from the library upon click */
+        const deleteCell = document.createElement("td");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "X";
+        
+        deleteBtn.addEventListener("click", () => {
+            deleteBtn.parentElement.parentElement.remove();
+            const bookIndex = myLibrary.findIndex(book => book.id === book.id);
+            if (bookIndex !== -1) {
+                myLibrary.splice(bookIndex, 1);
+            }
+        });
+        
+        /* Append all cells to the row and the row to the table body */
         row.appendChild(titleCell);
         row.appendChild(authorCell);
         row.appendChild(pagesCell);
-        row.appendChild(statusCell);
+        row.appendChild(readCell);
         row.appendChild(idCell);
+        deleteCell.appendChild(deleteBtn);
+        row.appendChild(deleteCell);
         tableBody.appendChild(row);
     });
 }
